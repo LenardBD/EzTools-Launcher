@@ -9,37 +9,120 @@
 :root{
   --bg:#0a0e14;--bg2:#12181f;--bg3:#1a222c;--bg4:#222c38;
   --border:#2d3a4a;--text:#e6edf5;--muted:#8b99ab;--hint:#5c6a7a;
-  --blue:#4a9eff;--green:#3dd68c;--purple:#a78bfa;--orange:#ff9f43;
+  --blue:#4a9eff;--orange:#ff9f43;--purple:#a78bfa;
+  --sb-full:224px;--sb-mini:52px;--transition:.22s ease;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;}
 
-#sidebar{width:224px;min-width:224px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow-y:auto;}
-.sb-logo{padding:16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-.sb-logomark{width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.sb-logomark svg{width:32px;height:32px;}
-.sb-logotext{font-size:.9rem;font-weight:700;letter-spacing:-.01em;}
+/* ── Sidebar ── */
+#sidebar{
+  width:var(--sb-full);min-width:var(--sb-full);
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100vh;overflow:hidden;
+  transition:width var(--transition),min-width var(--transition);
+  position:relative;
+}
+#sidebar.collapsed{width:var(--sb-mini);min-width:var(--sb-mini);}
+
+/* Toggle chevron button — sits on the right edge of sidebar */
+#sb-toggle{
+  position:absolute;top:50%;right:-14px;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);cursor:pointer;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:background .15s,color .15s,transform var(--transition);
+  user-select:none;flex-shrink:0;
+}
+#sb-toggle:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+#sidebar.collapsed #sb-toggle{transform:translateY(-50%) rotate(180deg);}
+
+/* Logo */
+.sb-logo{
+  padding:14px 10px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  overflow:hidden;white-space:nowrap;flex-shrink:0;
+}
+.sb-logomark{width:42px;height:42px;min-width:42px;display:flex;align-items:center;justify-content:center;}
+.sb-logomark img{width:42px;height:42px;object-fit:contain;border-radius:6px;}
+.sb-logotext{font-size:.9rem;font-weight:700;letter-spacing:-.01em;opacity:1;transition:opacity var(--transition);}
 .sb-logotext span{color:var(--muted);font-weight:500;}
-.sb-section{padding:16px 8px 4px;}
-.sb-cat{font-size:.62rem;font-weight:700;color:var(--hint);text-transform:uppercase;letter-spacing:.1em;padding:0 8px;margin-bottom:5px;}
-.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--muted);transition:all .15s;border:1px solid transparent;user-select:none;}
+#sidebar.collapsed .sb-logotext{opacity:0;pointer-events:none;width:0;overflow:hidden;}
+
+/* Scrollable nav area */
+.sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:8px;}
+
+.sb-section{padding:14px 6px 4px;}
+.sb-cat{
+  font-size:.62rem;font-weight:700;color:var(--hint);
+  text-transform:uppercase;letter-spacing:.1em;
+  padding:0 8px;margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;
+  opacity:1;transition:opacity var(--transition);
+}
+#sidebar.collapsed .sb-cat{opacity:0;height:0;margin:0;padding:0;}
+
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:7px;cursor:pointer;
+  font-size:.8rem;font-weight:500;color:var(--muted);
+  transition:background .15s,color .15s;border:1px solid transparent;
+  user-select:none;white-space:nowrap;overflow:hidden;
+  position:relative;
+}
 .sb-item:hover{background:var(--bg3);color:var(--text);}
 .sb-item.active{background:rgba(74,158,255,.12);color:var(--blue);border-color:rgba(74,158,255,.22);}
-.sb-item .ico{font-size:13px;width:18px;text-align:center;flex-shrink:0;}
-.sb-item .badge{margin-left:auto;font-size:.58rem;background:var(--bg4);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--hint);}
+.sb-item .ico{font-size:14px;width:20px;min-width:20px;text-align:center;}
+.sb-item .lbl{opacity:1;transition:opacity var(--transition);}
+#sidebar.collapsed .sb-item .lbl{opacity:0;width:0;overflow:hidden;}
+.sb-item .badge{
+  margin-left:auto;font-size:.58rem;background:var(--bg4);
+  border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--hint);
+  opacity:1;transition:opacity var(--transition);flex-shrink:0;
+}
+#sidebar.collapsed .sb-item .badge{opacity:0;width:0;overflow:hidden;padding:0;margin:0;}
 .sb-item.dim{opacity:.4;cursor:default;}
 .sb-item.dim:hover{background:transparent;color:var(--muted);}
 
-.sb-callout{margin:12px 10px;background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.2);border-radius:9px;padding:11px 12px;text-decoration:none;display:block;transition:all .2s;cursor:pointer;}
+/* Tooltip on collapsed */
+#sidebar.collapsed .sb-item{justify-content:center;}
+#sidebar.collapsed .sb-item:hover::after{
+  content:attr(data-tip);
+  position:absolute;left:calc(var(--sb-mini) + 8px);top:50%;transform:translateY(-50%);
+  background:var(--bg4);color:var(--text);
+  font-size:.75rem;font-weight:500;white-space:nowrap;
+  padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+  pointer-events:none;z-index:200;
+}
+
+/* Callout */
+.sb-callout{
+  margin:8px 6px;background:rgba(74,158,255,.07);
+  border:1px solid rgba(74,158,255,.2);border-radius:9px;
+  padding:11px 12px;cursor:pointer;transition:all .2s;
+  overflow:hidden;
+}
 .sb-callout:hover{background:rgba(74,158,255,.13);border-color:rgba(74,158,255,.35);}
-.sb-callout-icon{font-size:16px;margin-bottom:6px;}
-.sb-callout-text{font-size:.72rem;color:var(--muted);line-height:1.5;}
-.sb-callout-text strong{color:var(--blue);font-weight:600;display:block;margin-bottom:2px;font-size:.73rem;}
-.sb-callout-link{font-size:.68rem;color:var(--blue);margin-top:6px;display:flex;align-items:center;gap:4px;font-weight:600;}
+.sb-callout-inner{opacity:1;transition:opacity var(--transition);}
+#sidebar.collapsed .sb-callout-inner{opacity:0;height:0;overflow:hidden;}
+#sidebar.collapsed .sb-callout{padding:8px;display:flex;align-items:center;justify-content:center;}
+.sb-callout-icon{font-size:15px;margin-bottom:5px;}
+#sidebar.collapsed .sb-callout-icon{margin:0;}
+.sb-callout-text{font-size:.71rem;color:var(--muted);line-height:1.5;}
+.sb-callout-text strong{color:var(--blue);font-weight:600;display:block;margin-bottom:2px;}
+.sb-callout-link{font-size:.67rem;color:var(--blue);margin-top:6px;font-weight:600;}
 
-.sb-footer{padding:10px 14px;border-top:1px solid var(--border);font-size:.67rem;color:var(--hint);text-align:center;}
+.sb-footer{
+  padding:10px 14px;border-top:1px solid var(--border);
+  font-size:.67rem;color:var(--hint);text-align:center;
+  white-space:nowrap;overflow:hidden;
+  opacity:1;transition:opacity var(--transition);flex-shrink:0;
+}
+#sidebar.collapsed .sb-footer{opacity:0;}
 
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+/* ── Main ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:margin-left var(--transition);}
 #topbar{height:50px;min-height:50px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;}
 .tb-title{font-size:.88rem;font-weight:600;}
 .tb-sub{font-size:.72rem;color:var(--hint);}
@@ -61,7 +144,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tag{font-size:.62rem;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--bg4);color:var(--hint);border:1px solid var(--border);}
 .card-arrow{position:absolute;top:14px;right:14px;font-size:.75rem;color:var(--hint);opacity:0;transition:opacity .15s;}
 .tool-card:hover .card-arrow{opacity:1;}
-.card-launch{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:.72rem;font-weight:600;color:var(--blue);background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.25);border-radius:5px;padding:4px 9px;transition:all .15s;}
+.card-launch{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:.72rem;font-weight:600;color:var(--blue);background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.25);border-radius:5px;padding:4px 9px;}
 .tool-card:hover .card-launch{background:rgba(74,158,255,.18);}
 .renamer-note{background:rgba(255,159,67,.07);border:1px solid rgba(255,159,67,.3);border-radius:8px;padding:10px 14px;font-size:.75rem;color:var(--orange);margin-top:8px;line-height:1.5;}
 
@@ -71,12 +154,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .ph-sub{font-size:.71rem;color:var(--hint);margin-top:1px;}
 .ph-badge{margin-left:auto;font-size:.61rem;font-weight:600;background:var(--bg3);border:1px solid var(--border);color:var(--hint);border-radius:4px;padding:2px 7px;}
 
+/* ── Modal ── */
 #modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;}
 #modal-overlay.open{display:flex;}
 #modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:480px;width:90%;position:relative;}
 .modal-title{font-size:1rem;font-weight:700;margin-bottom:4px;}
 .modal-sub{font-size:.78rem;color:var(--muted);margin-bottom:20px;line-height:1.5;}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;line-height:1;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;}
 .modal-close:hover{color:var(--text);}
 .steps{display:flex;flex-direction:column;gap:12px;}
 .step{display:flex;gap:12px;align-items:flex-start;}
@@ -95,84 +179,75 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <body>
 
 <nav id="sidebar">
-  <div class="sb-logo">
+  <!-- Chevron toggle -->
+  <button id="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">‹</button>
+
+  <!-- Logo -->
+  <div class="sb-logo" onclick="toggleSidebar()" style="cursor:pointer;" title="Toggle sidebar">
     <div class="sb-logomark">
-      <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="400" cy="400" r="380" fill="#1e2d3d"/>
-        <g fill="none" stroke="#0a0e14" stroke-width="18" stroke-linejoin="round">
-          <!-- Outer left diagonal band -->
-          <polygon points="120,640 260,160 340,160 200,640" fill="#1e2d3d"/>
-          <!-- Middle triangle -->
-          <polygon points="260,640 400,220 540,640" fill="#1e2d3d"/>
-          <!-- Outer right diagonal band -->
-          <polygon points="460,160 540,160 680,640 600,640" fill="#1e2d3d"/>
-          <!-- Base line -->
-          <line x1="110" y1="640" x2="690" y2="640" stroke="#0a0e14" stroke-width="18"/>
-        </g>
-        <!-- Clip to circle -->
-        <circle cx="400" cy="400" r="380" fill="none" stroke="#0a0e14" stroke-width="2"/>
-      </svg>
+      <!-- Replace src with your logo filename once uploaded to GitHub, e.g. src="logo.png" -->
+      <img src="ontel-icon-logo.png" alt="EZ Tools logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div style="display:none;width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:7px;align-items:center;justify-content:center;font-size:15px;">⚡</div>
     </div>
     <div class="sb-logotext">EZ <span>Tools</span></div>
   </div>
 
-  <div class="sb-section">
-    <div class="sb-item active">
-      <span class="ico">⊞</span> Dashboard
+  <div class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-item active" data-tip="Dashboard">
+        <span class="ico">⊞</span><span class="lbl">Dashboard</span>
+      </div>
     </div>
-  </div>
 
-  <div class="sb-section">
-    <div class="sb-cat">Live Review</div>
-    <div class="sb-item" onclick="launch('email-gen')">
-      <span class="ico">📧</span> Email Generator
-      <span class="badge">Web</span>
+    <div class="sb-section">
+      <div class="sb-cat">Live Review</div>
+      <div class="sb-item" onclick="launch('email-gen')" data-tip="Email Generator">
+        <span class="ico">📧</span><span class="lbl">Email Generator</span><span class="badge">Web</span>
+      </div>
+      <div class="sb-item" onclick="launch('asbuilt')" data-tip="As-Built Converter">
+        <span class="ico">📋</span><span class="lbl">As-Built Converter</span><span class="badge">Web</span>
+      </div>
     </div>
-    <div class="sb-item" onclick="launch('asbuilt')">
-      <span class="ico">📋</span> As-Built Converter
-      <span class="badge">Web</span>
+
+    <div class="sb-section">
+      <div class="sb-cat">Sweeps</div>
+      <div class="sb-item" onclick="launch('ez')" data-tip="EZ Sweeps">
+        <span class="ico">📊</span><span class="lbl">EZ Sweeps</span><span class="badge">Web</span>
+      </div>
+      <div class="sb-item" onclick="launch('renamer')" data-tip="Sweep Renamer">
+        <span class="ico">✏️</span><span class="lbl">Sweep Renamer</span><span class="badge">File</span>
+      </div>
     </div>
-  </div>
 
-  <div class="sb-section">
-    <div class="sb-cat">Sweeps</div>
-    <div class="sb-item" onclick="launch('ez')">
-      <span class="ico">📊</span> EZ Sweeps
-      <span class="badge">Web</span>
+    <div class="sb-section">
+      <div class="sb-cat">PIM</div>
+      <div class="sb-item dim" data-tip="PIM — Coming soon"><span class="ico">＋</span><span class="lbl">Coming soon</span></div>
     </div>
-    <div class="sb-item" onclick="launch('renamer')">
-      <span class="ico">✏️</span> Sweep Renamer
-      <span class="badge">File</span>
+
+    <div class="sb-section">
+      <div class="sb-cat">Fiber</div>
+      <div class="sb-item dim" data-tip="Fiber — Coming soon"><span class="ico">＋</span><span class="lbl">Coming soon</span></div>
     </div>
-  </div>
 
-  <div class="sb-section">
-    <div class="sb-cat">PIM</div>
-    <div class="sb-item dim"><span class="ico">＋</span> Coming soon</div>
-  </div>
-
-  <div class="sb-section">
-    <div class="sb-cat">Fiber</div>
-    <div class="sb-item dim"><span class="ico">＋</span> Coming soon</div>
-  </div>
-
-  <div class="sb-section">
-    <div class="sb-cat">RET</div>
-    <div class="sb-item dim"><span class="ico">＋</span> Coming soon</div>
+    <div class="sb-section">
+      <div class="sb-cat">RET</div>
+      <div class="sb-item dim" data-tip="RET — Coming soon"><span class="ico">＋</span><span class="lbl">Coming soon</span></div>
+    </div>
   </div>
 
   <!-- Callout -->
-  <div style="flex:1;"></div>
   <div class="sb-callout" onclick="window.open('https://www.notion.so/ontel-nni-swifttt/303c573d7e3280e1a8ece3ba7513774c?v=303c573d7e328041a135000c3c98ac31&source=copy_link','_blank')">
     <div class="sb-callout-icon">✨</div>
-    <div class="sb-callout-text">
-      <strong>Explore AI Initiatives</strong>
-      See more AI-related initiatives that may pique your interest
+    <div class="sb-callout-inner">
+      <div class="sb-callout-text">
+        <strong>Explore AI Initiatives</strong>
+        See more AI-related initiatives that may pique your interest
+      </div>
+      <div class="sb-callout-link">View on Notion ↗</div>
     </div>
-    <div class="sb-callout-link">View on Notion ↗</div>
   </div>
 
-  <div class="sb-footer">v1.2 · EZ Tools</div>
+  <div class="sb-footer">v1.3 · EZ Tools</div>
 </nav>
 
 <!-- Renamer Help Modal -->
@@ -182,26 +257,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="modal-title">✏️ How to open the Sweep Renamer</div>
     <div class="modal-sub">The Sweep Renamer is a local HTML file. Follow these steps to get it running on your computer.</div>
     <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body"><strong>Download the file</strong><br>Save <code>PIM - Sweep Renamer.html</code> to your computer.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body"><strong>Locate the file</strong><br>Open your <strong>Downloads</strong> folder (or wherever you saved it).</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body"><strong>Open in Chrome</strong><br>Right-click the file → <strong>Open with</strong> → <strong>Google Chrome</strong>.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-body"><strong>If Chrome shows a warning</strong><br>Click <strong>Keep</strong> if prompted. If blocked, go to <code>chrome://settings/content/javascript</code> and ensure JavaScript is allowed.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-body"><strong>You're ready!</strong><br>Drag and drop your <code>.dat</code>, <code>.vna</code>, or <code>.pim</code> files into the tool.</div>
-      </div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Download the file</strong><br>Save <code>PIM - Sweep Renamer.html</code> to your computer.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Locate the file</strong><br>Open your <strong>Downloads</strong> folder or wherever you saved it.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Open in Chrome</strong><br>Right-click the file → <strong>Open with</strong> → <strong>Google Chrome</strong>.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>If Chrome shows a warning</strong><br>Click <strong>Keep</strong> if prompted. If blocked, go to <code>chrome://settings/content/javascript</code> and ensure JavaScript is allowed.</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>You're ready!</strong><br>Drag and drop your <code>.dat</code>, <code>.vna</code>, or <code>.pim</code> files into the tool.</div></div>
     </div>
     <div class="modal-footer">
       <button class="mbtn mbtn-secondary" onclick="closeModal()">Close</button>
@@ -222,7 +282,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="greeting">EZ Tools</div>
     <div class="greeting-sub">Click a tool to open it in a new tab.</div>
 
-    <!-- Live Review -->
     <div class="cat-label">Live Review</div>
     <div class="cards">
       <div class="tool-card" onclick="launch('email-gen')">
@@ -243,7 +302,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
 
-    <!-- Sweeps -->
     <div class="cat-label">Sweeps</div>
     <div class="cards">
       <div class="tool-card" onclick="launch('ez')">
@@ -265,7 +323,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
 
-    <!-- Coming Soon categories -->
     <div class="cat-label" style="margin-top:6px;">Coming Soon</div>
     <div class="placeholder">
       <div class="ph-icon">📡</div>
@@ -292,11 +349,16 @@ const tools = {
   'ez':        { url: 'https://ez-sweeps-v1.vercel.app/' },
   'renamer':   { url: 'PIM - Sweep Renamer.html' }
 };
+
 function launch(id) {
   const t = tools[id];
-  if (!t) return;
-  window.open(t.url, '_blank');
+  if (t) window.open(t.url, '_blank');
 }
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
 function openModal() {
   document.getElementById('modal-overlay').classList.add('open');
 }
