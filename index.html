@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIM Tools Dashboard</title>
+<title>EZ Tools</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -56,10 +56,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tag{font-size:.62rem;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--bg4);color:var(--hint);border:1px solid var(--border);}
 .card-arrow{position:absolute;top:14px;right:14px;font-size:.75rem;color:var(--hint);opacity:0;transition:opacity .15s;}
 .tool-card:hover .card-arrow{opacity:1;}
-
-/* Launch button on card */
 .card-launch{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:.72rem;font-weight:600;color:var(--blue);background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.25);border-radius:5px;padding:4px 9px;transition:all .15s;}
 .tool-card:hover .card-launch{background:rgba(74,158,255,.18);}
+
+/* Renamer note */
+.renamer-note{background:rgba(255,159,67,.07);border:1px solid rgba(255,159,67,.3);border-radius:8px;padding:10px 14px;font-size:.75rem;color:var(--orange);margin-top:8px;line-height:1.5;}
 
 /* Placeholder */
 .placeholder{background:var(--bg2);border:1px dashed var(--border);border-radius:10px;padding:16px 20px;margin-bottom:11px;display:flex;align-items:center;gap:14px;}
@@ -68,21 +69,51 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .ph-sub{font-size:.72rem;color:var(--hint);margin-top:2px;}
 .ph-badge{margin-left:auto;font-size:.62rem;font-weight:600;background:var(--bg3);border:1px solid var(--border);color:var(--hint);border-radius:4px;padding:2px 7px;}
 
-/* Renamer note */
-.renamer-note{background:rgba(255,159,67,.07);border:1px solid rgba(255,159,67,.3);border-radius:8px;padding:10px 14px;font-size:.75rem;color:var(--orange);margin-top:8px;line-height:1.5;}
+/* Modal */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;}
+#modal-overlay.open{display:flex;}
+#modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:480px;width:90%;position:relative;}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:4px;}
+.modal-sub{font-size:.78rem;color:var(--muted);margin-bottom:20px;line-height:1.5;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--text);}
+.steps{display:flex;flex-direction:column;gap:12px;}
+.step{display:flex;gap:12px;align-items:flex-start;}
+.step-num{width:24px;height:24px;min-width:24px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.3);color:var(--blue);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.step-body{font-size:.78rem;color:var(--muted);line-height:1.6;}
+.step-body strong{color:var(--text);font-weight:600;}
+.step-body code{font-family:'JetBrains Mono',monospace;font-size:.72rem;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--blue);}
+.modal-footer{margin-top:20px;display:flex;gap:8px;justify-content:flex-end;}
+.mbtn{font-family:inherit;font-size:.78rem;font-weight:600;padding:8px 14px;border-radius:7px;border:none;cursor:pointer;transition:all .15s;}
+.mbtn-primary{background:var(--blue);color:#fff;}
+.mbtn-primary:hover{background:#3d8ce6;}
+.mbtn-secondary{background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.mbtn-secondary:hover{background:var(--bg4);color:var(--text);}
 </style>
 </head>
 <body>
 
 <nav id="sidebar">
   <div class="sb-logo">
-    <div class="sb-logomark">📡</div>
-    <div class="sb-logotext">PIM <span>Tools</span></div>
+    <div class="sb-logomark">⚡</div>
+    <div class="sb-logotext">EZ <span>Tools</span></div>
   </div>
 
   <div class="sb-section">
     <div class="sb-item active">
       <span class="ico">⊞</span> Dashboard
+    </div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-cat">Live Review</div>
+    <div class="sb-item" onclick="launch('email-gen')">
+      <span class="ico">📧</span> Email Generator
+      <span class="badge">Web</span>
+    </div>
+    <div class="sb-item" onclick="launch('asbuilt')">
+      <span class="ico">📋</span> As-Built Converter
+      <span class="badge">Web</span>
     </div>
   </div>
 
@@ -99,17 +130,47 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 
   <div class="sb-section">
-    <div class="sb-cat">Category 2</div>
-    <div class="sb-item dim"><span class="ico">＋</span> Add tools here</div>
-  </div>
-
-  <div class="sb-section">
     <div class="sb-cat">Category 3</div>
     <div class="sb-item dim"><span class="ico">＋</span> Add tools here</div>
   </div>
 
-  <div class="sb-footer">v1.0 · PIM Dashboard</div>
+  <div class="sb-footer">v1.1 · EZ Tools</div>
 </nav>
+
+<!-- Renamer Help Modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">✏️ How to open the Sweep Renamer</div>
+    <div class="modal-sub">The Sweep Renamer is a local HTML file. Follow these steps to get it running on your computer.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Download the file</strong><br>Save <code>PIM - Sweep Renamer.html</code> to your computer.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Locate the file</strong><br>Open your <strong>Downloads</strong> folder (or wherever you saved it).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Open in Chrome</strong><br>Right-click the file → <strong>Open with</strong> → <strong>Google Chrome</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>If Chrome shows a warning</strong><br>Click <strong>Keep</strong> if prompted. If blocked, go to <code>chrome://settings/content/javascript</code> and ensure JavaScript is allowed.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>You're ready!</strong><br>Drag and drop your <code>.dat</code>, <code>.vna</code>, or <code>.pim</code> files into the tool.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn mbtn-secondary" onclick="closeModal()">Close</button>
+      <button class="mbtn mbtn-primary" onclick="launch('renamer')">↗ Try opening anyway</button>
+    </div>
+  </div>
+</div>
 
 <div id="main">
   <div id="topbar">
@@ -120,9 +181,34 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 
   <div id="content">
-    <div class="greeting">PIM Tools Dashboard</div>
+    <div class="greeting">EZ Tools</div>
     <div class="greeting-sub">Click a tool to open it in a new tab.</div>
 
+    <!-- Live Review -->
+    <div class="cat-label">Live Review</div>
+    <div class="cards">
+
+      <div class="tool-card" onclick="launch('email-gen')">
+        <span class="card-arrow">↗</span>
+        <div class="card-icon">📧</div>
+        <div class="card-name">Live Review Email Generator</div>
+        <div class="card-desc">Generate formatted live review emails quickly and consistently.</div>
+        <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
+        <div class="card-launch">↗ Open in new tab</div>
+      </div>
+
+      <div class="tool-card" onclick="launch('asbuilt')">
+        <span class="card-arrow">↗</span>
+        <div class="card-icon">📋</div>
+        <div class="card-name">As-Built Info Summary Converter</div>
+        <div class="card-desc">Convert and summarize as-built information into a structured format.</div>
+        <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
+        <div class="card-launch">↗ Open in new tab</div>
+      </div>
+
+    </div>
+
+    <!-- Sweeps -->
     <div class="cat-label">Sweeps</div>
     <div class="cards">
 
@@ -142,35 +228,43 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="card-desc">Batch rename .dat, .vna, and .pim files with auto-detection and ZIP export.</div>
         <div class="card-tags"><span class="tag">HTML File</span><span class="tag">Sweeps</span></div>
         <div class="card-launch">↗ Open in new tab</div>
-        <div class="renamer-note">⚠️ Save the Renamer HTML file to your computer first, then it will open from there.</div>
+        <div class="renamer-note">⚠️ This is a local HTML file. <span style="color:var(--blue);cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation();openModal()">Can't open it? See step-by-step guide →</span></div>
       </div>
 
     </div>
 
+    <!-- Placeholder -->
     <div class="cat-label" style="margin-top:6px;">Coming Soon</div>
-    <div class="placeholder">
-      <div class="ph-icon">📁</div>
-      <div><div class="ph-name">Category 2</div><div class="ph-sub">Your next set of tools will appear here</div></div>
-      <div class="ph-badge">Pending</div>
-    </div>
     <div class="placeholder">
       <div class="ph-icon">📁</div>
       <div><div class="ph-name">Category 3</div><div class="ph-sub">Your next set of tools will appear here</div></div>
       <div class="ph-badge">Pending</div>
     </div>
+
   </div>
 </div>
 
 <script>
 const tools = {
-  ez: { url: 'https://ez-sweeps-v1.vercel.app/' },
-  renamer: { url: 'PIM - Sweep Renamer.html' }
+  'email-gen': { url: 'https://live-review-email-generator.vercel.app/' },
+  'asbuilt':   { url: 'https://sites.google.com/ontel.co/asbuilt-info-summary-converter/home' },
+  'ez':        { url: 'https://ez-sweeps-v1.vercel.app/' },
+  'renamer':   { url: 'PIM - Sweep Renamer.html' }
 };
 function launch(id) {
   const t = tools[id];
   if (!t) return;
   window.open(t.url, '_blank');
 }
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
