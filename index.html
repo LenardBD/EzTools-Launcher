@@ -13,7 +13,7 @@
   --sb-full:224px;--sb-mini:52px;--transition:.22s ease;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden;}
 
 /* ── Sidebar ── */
 #sidebar{
@@ -21,11 +21,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   background:var(--bg2);border-right:1px solid var(--border);
   display:flex;flex-direction:column;height:100vh;overflow:hidden;
   transition:width var(--transition),min-width var(--transition);
-  position:relative;
+  position:relative;flex-shrink:0;
 }
 #sidebar.collapsed{width:var(--sb-mini);min-width:var(--sb-mini);}
 
-/* Toggle chevron button — sits on the right edge of sidebar */
 #sb-toggle{
   position:absolute;top:50%;right:-14px;transform:translateY(-50%);
   width:28px;height:28px;border-radius:50%;
@@ -38,11 +37,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 #sb-toggle:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
 #sidebar.collapsed #sb-toggle{transform:translateY(-50%) rotate(180deg);}
 
-/* Logo */
 .sb-logo{
   padding:14px 10px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;
-  overflow:hidden;white-space:nowrap;flex-shrink:0;
+  overflow:hidden;white-space:nowrap;flex-shrink:0;cursor:pointer;
 }
 .sb-logomark{width:42px;height:42px;min-width:42px;display:flex;align-items:center;justify-content:center;}
 .sb-logomark img{width:42px;height:42px;object-fit:contain;border-radius:6px;}
@@ -50,15 +48,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .sb-logotext span{color:var(--muted);font-weight:500;}
 #sidebar.collapsed .sb-logotext{opacity:0;pointer-events:none;width:0;overflow:hidden;}
 
-/* Scrollable nav area */
 .sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:8px;}
-
 .sb-section{padding:14px 6px 4px;}
 .sb-cat{
   font-size:.62rem;font-weight:700;color:var(--hint);
   text-transform:uppercase;letter-spacing:.1em;
-  padding:0 8px;margin-bottom:4px;
-  white-space:nowrap;overflow:hidden;
+  padding:0 8px;margin-bottom:4px;white-space:nowrap;
   opacity:1;transition:opacity var(--transition);
 }
 #sidebar.collapsed .sb-cat{opacity:0;height:0;margin:0;padding:0;}
@@ -68,8 +63,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   padding:8px 10px;border-radius:7px;cursor:pointer;
   font-size:.8rem;font-weight:500;color:var(--muted);
   transition:background .15s,color .15s;border:1px solid transparent;
-  user-select:none;white-space:nowrap;overflow:hidden;
-  position:relative;
+  user-select:none;white-space:nowrap;overflow:hidden;position:relative;
 }
 .sb-item:hover{background:var(--bg3);color:var(--text);}
 .sb-item.active{background:rgba(74,158,255,.12);color:var(--blue);border-color:rgba(74,158,255,.22);}
@@ -84,24 +78,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 #sidebar.collapsed .sb-item .badge{opacity:0;width:0;overflow:hidden;padding:0;margin:0;}
 .sb-item.dim{opacity:.4;cursor:default;}
 .sb-item.dim:hover{background:transparent;color:var(--muted);}
-
-/* Tooltip on collapsed */
 #sidebar.collapsed .sb-item{justify-content:center;}
 #sidebar.collapsed .sb-item:hover::after{
   content:attr(data-tip);
   position:absolute;left:calc(var(--sb-mini) + 8px);top:50%;transform:translateY(-50%);
-  background:var(--bg4);color:var(--text);
-  font-size:.75rem;font-weight:500;white-space:nowrap;
-  padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+  background:var(--bg4);color:var(--text);font-size:.75rem;font-weight:500;
+  white-space:nowrap;padding:5px 10px;border-radius:6px;border:1px solid var(--border);
   pointer-events:none;z-index:200;
 }
 
-/* Callout */
 .sb-callout{
   margin:8px 6px;background:rgba(74,158,255,.07);
   border:1px solid rgba(74,158,255,.2);border-radius:9px;
-  padding:11px 12px;cursor:pointer;transition:all .2s;
-  overflow:hidden;
+  padding:11px 12px;cursor:pointer;transition:all .2s;overflow:hidden;flex-shrink:0;
 }
 .sb-callout:hover{background:rgba(74,158,255,.13);border-color:rgba(74,158,255,.35);}
 .sb-callout-inner{opacity:1;transition:opacity var(--transition);}
@@ -116,24 +105,34 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .sb-footer{
   padding:10px 14px;border-top:1px solid var(--border);
   font-size:.67rem;color:var(--hint);text-align:center;
-  white-space:nowrap;overflow:hidden;
-  opacity:1;transition:opacity var(--transition);flex-shrink:0;
+  white-space:nowrap;overflow:hidden;flex-shrink:0;
+  opacity:1;transition:opacity var(--transition);
 }
 #sidebar.collapsed .sb-footer{opacity:0;}
 
 /* ── Main ── */
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:margin-left var(--transition);}
-#topbar{height:50px;min-height:50px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+#topbar{
+  height:50px;min-height:50px;background:var(--bg2);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;flex-shrink:0;
+}
 .tb-title{font-size:.88rem;font-weight:600;}
 .tb-sub{font-size:.72rem;color:var(--hint);}
 
-#content{flex:1;overflow-y:auto;padding:28px 24px;}
+/* Scrollable content */
+#content{flex:1;overflow-y:auto;overflow-x:hidden;padding:28px 24px;}
+
 .greeting{font-size:1.25rem;font-weight:700;margin-bottom:3px;}
 .greeting-sub{font-size:.82rem;color:var(--muted);margin-bottom:26px;}
-.cat-label{font-size:.67rem;font-weight:700;color:var(--hint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:11px;}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px;margin-bottom:26px;}
 
-.tool-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.cat-section{margin-bottom:32px;}
+.cat-label{font-size:.67rem;font-weight:700;color:var(--hint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:11px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px;}
+
+.tool-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+}
 .tool-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,158,255,0),rgba(74,158,255,.06));opacity:0;transition:opacity .2s;}
 .tool-card:hover{border-color:var(--blue);transform:translateY(-2px);}
 .tool-card:hover::after{opacity:1;}
@@ -179,15 +178,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <body>
 
 <nav id="sidebar">
-  <!-- Chevron toggle -->
   <button id="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">‹</button>
 
-  <!-- Logo -->
-  <div class="sb-logo" onclick="toggleSidebar()" style="cursor:pointer;" title="Toggle sidebar">
+  <div class="sb-logo" onclick="toggleSidebar()" title="Toggle sidebar">
     <div class="sb-logomark">
-      <!-- Replace src with your logo filename once uploaded to GitHub, e.g. src="logo.png" -->
       <img src="ontel-icon-logo.png" alt="EZ Tools logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div style="display:none;width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:7px;align-items:center;justify-content:center;font-size:15px;">⚡</div>
+      <div style="display:none;width:42px;height:42px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:7px;align-items:center;justify-content:center;font-size:18px;">⚡</div>
     </div>
     <div class="sb-logotext">EZ <span>Tools</span></div>
   </div>
@@ -231,11 +227,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <div class="sb-section">
       <div class="sb-cat">RET</div>
-      <div class="sb-item dim" data-tip="RET — Coming soon"><span class="ico">＋</span><span class="lbl">Coming soon</span></div>
+      <div class="sb-item" onclick="launch('ret')" data-tip="RET Extractor">
+        <span class="ico">📶</span><span class="lbl">RET Extractor</span><span class="badge">Web</span>
+      </div>
     </div>
   </div>
 
-  <!-- Callout -->
   <div class="sb-callout" onclick="window.open('https://www.notion.so/ontel-nni-swifttt/303c573d7e3280e1a8ece3ba7513774c?v=303c573d7e328041a135000c3c98ac31&source=copy_link','_blank')">
     <div class="sb-callout-icon">✨</div>
     <div class="sb-callout-inner">
@@ -247,7 +244,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
-  <div class="sb-footer">v1.3 · EZ Tools</div>
+  <div class="sb-footer">v1.4 · EZ Tools</div>
 </nav>
 
 <!-- Renamer Help Modal -->
@@ -282,63 +279,83 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="greeting">EZ Tools</div>
     <div class="greeting-sub">Click a tool to open it in a new tab.</div>
 
-    <div class="cat-label">Live Review</div>
-    <div class="cards">
-      <div class="tool-card" onclick="launch('email-gen')">
-        <span class="card-arrow">↗</span>
-        <div class="card-icon">📧</div>
-        <div class="card-name">Live Review Email Generator</div>
-        <div class="card-desc">Generate formatted live review emails quickly and consistently.</div>
-        <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
-        <div class="card-launch">↗ Open in new tab</div>
-      </div>
-      <div class="tool-card" onclick="launch('asbuilt')">
-        <span class="card-arrow">↗</span>
-        <div class="card-icon">📋</div>
-        <div class="card-name">As-Built Info Summary Converter</div>
-        <div class="card-desc">Convert and summarize as-built information into a structured format.</div>
-        <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
-        <div class="card-launch">↗ Open in new tab</div>
-      </div>
-    </div>
-
-    <div class="cat-label">Sweeps</div>
-    <div class="cards">
-      <div class="tool-card" onclick="launch('ez')">
-        <span class="card-arrow">↗</span>
-        <div class="card-icon">📊</div>
-        <div class="card-name">EZ Sweeps</div>
-        <div class="card-desc">Visualize and analyze line sweep data online.</div>
-        <div class="card-tags"><span class="tag">Web App</span><span class="tag">Sweeps</span></div>
-        <div class="card-launch">↗ Open in new tab</div>
-      </div>
-      <div class="tool-card" onclick="launch('renamer')">
-        <span class="card-arrow">↗</span>
-        <div class="card-icon">✏️</div>
-        <div class="card-name">Sweep Renamer</div>
-        <div class="card-desc">Batch rename .dat, .vna, and .pim files with auto-detection and ZIP export.</div>
-        <div class="card-tags"><span class="tag">HTML File</span><span class="tag">Sweeps</span></div>
-        <div class="card-launch">↗ Open in new tab</div>
-        <div class="renamer-note">⚠️ This is a local HTML file. <span style="color:var(--blue);cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation();openModal()">Can't open it? See step-by-step guide →</span></div>
+    <!-- Live Review -->
+    <div class="cat-section">
+      <div class="cat-label">Live Review</div>
+      <div class="cards">
+        <div class="tool-card" onclick="launch('email-gen')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">📧</div>
+          <div class="card-name">Live Review Email Generator</div>
+          <div class="card-desc">Generate formatted live review emails quickly and consistently.</div>
+          <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+        </div>
+        <div class="tool-card" onclick="launch('asbuilt')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">📋</div>
+          <div class="card-name">As-Built Info Summary Converter</div>
+          <div class="card-desc">Convert and summarize as-built information into a structured format.</div>
+          <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+        </div>
       </div>
     </div>
 
-    <div class="cat-label" style="margin-top:6px;">Coming Soon</div>
-    <div class="placeholder">
-      <div class="ph-icon">📡</div>
-      <div><div class="ph-name">PIM</div><div class="ph-sub">Tools for PIM testing and analysis</div></div>
-      <div class="ph-badge">Pending</div>
+    <!-- Sweeps -->
+    <div class="cat-section">
+      <div class="cat-label">Sweeps</div>
+      <div class="cards">
+        <div class="tool-card" onclick="launch('ez')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">📊</div>
+          <div class="card-name">EZ Sweeps</div>
+          <div class="card-desc">Visualize and analyze line sweep data online.</div>
+          <div class="card-tags"><span class="tag">Web App</span><span class="tag">Sweeps</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+        </div>
+        <div class="tool-card" onclick="launch('renamer')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">✏️</div>
+          <div class="card-name">Sweep Renamer</div>
+          <div class="card-desc">Batch rename .dat, .vna, and .pim files with auto-detection and ZIP export.</div>
+          <div class="card-tags"><span class="tag">HTML File</span><span class="tag">Sweeps</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+          <div class="renamer-note">⚠️ This is a local HTML file. <span style="color:var(--blue);cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation();openModal()">Can't open it? See step-by-step guide →</span></div>
+        </div>
+      </div>
     </div>
-    <div class="placeholder">
-      <div class="ph-icon">🔌</div>
-      <div><div class="ph-name">Fiber</div><div class="ph-sub">Fiber-related tools coming here</div></div>
-      <div class="ph-badge">Pending</div>
+
+    <!-- RET -->
+    <div class="cat-section">
+      <div class="cat-label">RET</div>
+      <div class="cards">
+        <div class="tool-card" onclick="launch('ret')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">📶</div>
+          <div class="card-name">RET Extractor</div>
+          <div class="card-desc">Extract and process RET data from network equipment.</div>
+          <div class="card-tags"><span class="tag">Web App</span><span class="tag">RET</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+        </div>
+      </div>
     </div>
-    <div class="placeholder">
-      <div class="ph-icon">📶</div>
-      <div><div class="ph-name">RET</div><div class="ph-sub">Remote electrical tilt tools coming here</div></div>
-      <div class="ph-badge">Pending</div>
+
+    <!-- Coming Soon -->
+    <div class="cat-section">
+      <div class="cat-label">Coming Soon</div>
+      <div class="placeholder">
+        <div class="ph-icon">📡</div>
+        <div><div class="ph-name">PIM</div><div class="ph-sub">Tools for PIM testing and analysis</div></div>
+        <div class="ph-badge">Pending</div>
+      </div>
+      <div class="placeholder">
+        <div class="ph-icon">🔌</div>
+        <div><div class="ph-name">Fiber</div><div class="ph-sub">Fiber-related tools coming here</div></div>
+        <div class="ph-badge">Pending</div>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -347,18 +364,16 @@ const tools = {
   'email-gen': { url: 'https://live-review-email-generator.vercel.app/' },
   'asbuilt':   { url: 'https://sites.google.com/ontel.co/asbuilt-info-summary-converter/home' },
   'ez':        { url: 'https://ez-sweeps-v1.vercel.app/' },
-  'renamer':   { url: 'PIM - Sweep Renamer.html' }
+  'renamer':   { url: 'PIM - Sweep Renamer.html' },
+  'ret':       { url: 'https://ret-extractor-zvy7.vercel.app/' }
 };
-
 function launch(id) {
   const t = tools[id];
   if (t) window.open(t.url, '_blank');
 }
-
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('collapsed');
 }
-
 function openModal() {
   document.getElementById('modal-overlay').classList.add('open');
 }
