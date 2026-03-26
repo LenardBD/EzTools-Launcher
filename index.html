@@ -211,7 +211,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <span class="ico">📊</span><span class="lbl">EZ Sweeps</span><span class="badge">Web</span>
       </div>
       <div class="sb-item" onclick="launch('renamer')" data-tip="Sweep Renamer">
-        <span class="ico">✏️</span><span class="lbl">Sweep Renamer</span><span class="badge">File</span>
+        <span class="ico">✏️</span><span class="lbl">Sweep Renamer</span><span class="badge">Drive</span>
       </div>
     </div>
 
@@ -299,6 +299,29 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
           <div class="card-launch">↗ Open in new tab</div>
         </div>
+        <div class="tool-card" onclick="launch('mp-tracker')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">📌</div>
+          <div class="card-name">MP Tracker</div>
+          <div class="card-desc">Track and manage milestone packages for live review.</div>
+          <div class="card-tags"><span class="tag">Web App</span><span class="tag">Live Review</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closeout -->
+    <div class="cat-section">
+      <div class="cat-label">Closeout</div>
+      <div class="cards">
+        <div class="tool-card" onclick="launch('rfds')">
+          <span class="card-arrow">↗</span>
+          <div class="card-icon">📝</div>
+          <div class="card-name">RFDS Redline Tool</div>
+          <div class="card-desc">Compare proposed RFDS values against As-Built data and auto-place redline annotations.</div>
+          <div class="card-tags"><span class="tag">Web App</span><span class="tag">Closeout</span></div>
+          <div class="card-launch">↗ Open in new tab</div>
+        </div>
       </div>
     </div>
 
@@ -319,9 +342,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <div class="card-icon">✏️</div>
           <div class="card-name">Sweep Renamer</div>
           <div class="card-desc">Batch rename .dat, .vna, and .pim files with auto-detection and ZIP export.</div>
-          <div class="card-tags"><span class="tag">HTML File</span><span class="tag">Sweeps</span></div>
+          <div class="card-tags"><span class="tag">Google Drive</span><span class="tag">Sweeps</span></div>
           <div class="card-launch">↗ Open in new tab</div>
-          <div class="renamer-note">⚠️ This is a local HTML file. <span style="color:var(--blue);cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation();openModal()">Can't open it? See step-by-step guide →</span></div>
         </div>
       </div>
     </div>
@@ -361,8 +383,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <script>
 const tools = {
-  'email-gen': { url: 'https://live-review-email-generator.vercel.app/' },
-  'asbuilt':   { url: 'https://sites.google.com/ontel.co/asbuilt-info-summary-converter/home' },
+  'email-gen':  { url: 'https://live-review-email-generator.vercel.app/' },
+  'asbuilt':    { url: 'https://sites.google.com/ontel.co/asbuilt-info-summary-converter/home' },
+  'mp-tracker': { url: 'https://mp-trackerz.vercel.app/' },
+  'renamer':    { url: 'https://drive.google.com/file/d/1OKVRBXaZE8SM2nb4-iDq_xmkbjxmO_fu/view?usp=sharing' },
+  'rfds':       { url: 'https://rfds-redline-tool.vercel.app/' },
   'ez':        { url: 'https://ez-sweeps-v1.vercel.app/' },
   'renamer':   { url: 'PIM - Sweep Renamer.html' },
   'ret':       { url: 'https://ret-extractor-zvy7.vercel.app/' }
